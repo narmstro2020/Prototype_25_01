@@ -15,7 +15,10 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -28,7 +31,10 @@ public class Robot extends TimedRobot {
     private final SparkMax motor0 = new SparkMax(16, MotorType.kBrushless);
     private final SparkMax motor1 = new SparkMax(18, MotorType.kBrushless);
     private final SparkMax motor2 = new SparkMax(24, MotorType.kBrushless);
-    private final CommandXboxController controller = new CommandXboxController(0);
+    private final XboxController controller = new XboxController(0);
+
+    private final Solenoid solenoid =  new Solenoid(PneumaticsModuleType.REVPH, 0);
+
     private final SparkMaxSim motor0Sim = new SparkMaxSim(motor0, DCMotor.getNeo550(1));
     private final SparkMaxSim motor1Sim = new SparkMaxSim(motor1, DCMotor.getNeo550(1));
     private final SparkMaxSim motor2Sim = new SparkMaxSim(motor2, DCMotor.getNeo550(1));
@@ -65,6 +71,11 @@ public class Robot extends TimedRobot {
         motor0.setVoltage(leftValue * 12.0);
         motor1.setVoltage(rightValue * 12.0);
         motor2.setVoltage(triggerVoltage);
+
+        
+        if(controller.getAButtonPressed()){
+            solenoid.toggle();
+        }
 
         // motor0.getClosedLoopController().setReference(leftValue * 11000, SparkBase.ControlType.kVelocity);
         // motor1.getClosedLoopController().setReference(rightValue * 11000, SparkBase.ControlType.kVelocity);
